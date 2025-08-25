@@ -21,16 +21,19 @@ $userController = new AuthController();
 $router = new Router();
 
 // Routes
-$router->add("GET", "/api/users", [$userController, "index"]);
-$router->add("POST", "/api/users", function () use ($userController) {
-    $data = json_decode(file_get_contents("php://input"), true);
+$router->add(method: "POST", path: "/retrieveData", callback: function () use ($userController): void {
+    $userController->retrieveData();
+});
+
+$router->add(method: "POST", path: "/register", callback: function () use ($userController) {
+    $data = json_decode(file_get_contents("php://input"), associative: true);
     $userController->register();
 });
-$router->add("PUT", "/api/users", function () use ($userController) {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $userController->login();
+$router->add(method: "PUT", path: "/api/users", callback: function () use ($userController) {
+    $data = json_decode(file_get_contents("php://input"), associative: true);
+    // $userController->login();
 });
-$router->add("DELETE", "/api/users/(\d+)", function ($id) use ($userController) {
+$router->add(method: "DELETE", path: "/api/users/(\d+)", callback: function ($id) use ($userController) {
     // $userController->destroy($id);
 });
 
