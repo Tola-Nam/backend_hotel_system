@@ -4,7 +4,9 @@ session_start();
 require_once "app/Controllers/AuthController.php";
 require_once('Configs/database_connection.php');
 require_once('core/router.php');
-
+require_once('app/Controllers/check_in.php');
+require_once('app/Controllers/booking.php');
+require_once('app/Controllers/room.php');
 // header api json
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
@@ -17,10 +19,13 @@ header("Access-Control-Allow-Headers: Content-Type");
 //     return $db;
 
 // }
+// make object in controller
 $userController = new AuthController();
 $router = new Router();
-
-// Routes
+// $booking = new Booking();
+// $checkIn = new Check_in();
+$addRoom = new Room_type();
+// Routes  for register account
 $router->add(method: "POST", path: "/retrieveData", callback: function () use ($userController): void {
     $userController->retrieveData();
 });
@@ -29,12 +34,14 @@ $router->add(method: "POST", path: "/register", callback: function () use ($user
     $data = json_decode(file_get_contents("php://input"), associative: true);
     $userController->register();
 });
-$router->add(method: "PUT", path: "/api/users", callback: function () use ($userController) {
+
+// route for make room type
+$router->add(method: "POST", path: "/createRoomType", callback: function () use ($addRoom) {
     $data = json_decode(file_get_contents("php://input"), associative: true);
-    // $userController->login();
+    $addRoom->createRoomType();
 });
-$router->add(method: "DELETE", path: "/api/users/(\d+)", callback: function ($id) use ($userController) {
-    // $userController->destroy($id);
+$router->add(method: "PUT", path: "/UpdateRoomType", callback: function () use ($addRoom) {
+    $addRoom->UpdateRoomType();
 });
 
 // Run
